@@ -15,7 +15,7 @@ ui <- fluidPage(
     sidebarPanel(
       selectInput(inputId = "forecast",
                   label = "Choose a forecast:",
-                  choices = c("Campbell", "Lewis-Baeck", "EWT2C2", "Fair", "Hibbs", "Abramowitz")),
+                  choices = c("Campbell", "Lewis-Beck", "EWT2C2", "Fair", "Hibbs", "Abramowitz")),
       
       # Input: Numeric entry for number of obs to view ----
       numericInput(inputId = "obs",
@@ -45,15 +45,25 @@ server <- function(input, output) {
   library(EBMAforecast)
   data("presidentialForecast")
   
+  forecastInput <- reactive({
+    switch(input$forecast,
+           "Campbell" = presidentialForecast$Campbell,
+           "Lewis-Beck" = presidentialForecast$`Lewis-Beck`,
+           "EWT2C2" = presidentialForecast$EWT2C2,
+           "Fair" = presidentialForecast$Fair,
+           "Hibbs" = presidentialForecast$Hibbs,
+           "Abramowitz" = presidentialForecast$Abramowitz) 
+  })
+  
   output$plot <- renderPlot({
     input$newplot
     # Add a little noise to the cars data
     plot(x = 1:15, y = presidentialForecast$Actual, main = "Election Results by Indexed Election Year", 
          xlab = "Indexed Election Year 1952-2008", ylab = "Election Results", col = 12, type = "l")
+    lines( x = 1:15, y = forecastInput())
     
   })
-
-  
+    
   datasetInput <- reactive({
     presidentialForecast
   })
@@ -62,8 +72,6 @@ server <- function(input, output) {
   })
   
 }
-
-
 
 
 # Create Shiny app ----
