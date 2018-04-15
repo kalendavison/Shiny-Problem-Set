@@ -13,6 +13,9 @@ ui <- fluidPage(
     
     # Sidebar panel for inputs ----
     sidebarPanel(
+      selectInput(inputId = "forecast",
+                  label = "Choose a forecast:",
+                  choices = c("Campbell", "Lewis-Baeck", "EWT2C2", "Fair", "Hibbs", "Abramowitz")),
       
       # Input: Numeric entry for number of obs to view ----
       numericInput(inputId = "obs",
