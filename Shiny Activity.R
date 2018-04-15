@@ -13,6 +13,14 @@ ui <- fluidPage(
     
     # Sidebar panel for inputs ----
     sidebarPanel(
+
+      
+      # Input: Numeric entry for number of obs to view ----
+      numericInput(inputId = "obs",
+                   label = "Number of elections to display:",
+                   value = 15
+    ),
+      
       
       # Include clarifying text ----
       helpText("Here are the results from presidential forecasts from 1952-2008")
@@ -21,7 +29,8 @@ ui <- fluidPage(
     
     # Main panel for displaying outputs ----
     mainPanel(
-      tableOutput("view")
+      tableOutput("view"),
+      plotOutput(outputId = "Plot")
     )
     
   )
@@ -34,12 +43,20 @@ server <- function(input, output) {
   library(EBMAforecast)
   data("presidentialForecast")
   
+  datasetInput <- reactive({
+    presidentialForecast
+  })
   output$view <- renderTable({
-  presidentialForecast
-    })
+    head(datasetInput(), n = input$obs)
+  })
+  
 }
 
+
+
+
+
 # Create Shiny app ----
-shinyApp(ui, server)
+shinyApp(ui = ui, server = server)
 
 
