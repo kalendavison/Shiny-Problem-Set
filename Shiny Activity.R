@@ -32,8 +32,10 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
       tableOutput("view"),
-      plotOutput("plot")
+      plotOutput("plot", click = "plot_click"),
+      verbatimTextOutput("info")
     )
+    
     
   )
 )
@@ -57,10 +59,9 @@ server <- function(input, output) {
   
   output$plot <- renderPlot({
     input$newplot
-    # Add a little noise to the cars data
     plot(x = 1:15, y = presidentialForecast$Actual, main = "Election Results by Indexed Election Year", 
          xlab = "Indexed Election Year 1952-2008", ylab = "Election Results", col = 12, type = "l")
-    lines( x = 1:15, y = forecastInput())
+    lines(x = 1:15, y = forecastInput())
     
   })
     
@@ -71,6 +72,9 @@ server <- function(input, output) {
     head(datasetInput(), n = input$obs)
   })
   
+  output$info <- renderText({
+    paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
+  })
 }
 
 
