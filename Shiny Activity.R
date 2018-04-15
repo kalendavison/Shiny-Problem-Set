@@ -13,7 +13,6 @@ ui <- fluidPage(
     
     # Sidebar panel for inputs ----
     sidebarPanel(
-
       
       # Input: Numeric entry for number of obs to view ----
       numericInput(inputId = "obs",
@@ -30,7 +29,7 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
       tableOutput("view"),
-      plotOutput(outputId = "Plot")
+      plotOutput("plot")
     )
     
   )
@@ -43,6 +42,15 @@ server <- function(input, output) {
   library(EBMAforecast)
   data("presidentialForecast")
   
+  output$plot <- renderPlot({
+    input$newplot
+    # Add a little noise to the cars data
+    plot(x = 1:15, y = presidentialForecast$Actual, main = "Election Results by Indexed Election Year", 
+         xlab = "Indexed Election Year 1952-2008", ylab = "Election Results", col = 12, type = "l")
+    
+  })
+
+  
   datasetInput <- reactive({
     presidentialForecast
   })
@@ -51,7 +59,6 @@ server <- function(input, output) {
   })
   
 }
-
 
 
 
